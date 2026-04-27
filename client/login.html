@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — BHATI LAW ASSOCIATES</title>
+  <meta name="description" content="Secure login portal for BHATI LAW ASSOCIATES. Admin and client access.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="css/login.css">
+
+  <!-- ✅ Firebase SDK v9 (compat mode — works in plain HTML) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+</head>
+<body class="login-body">
+
+  <!-- Background Elements -->
+  <div class="login-bg">
+    <div class="login-bg-circle login-bg-circle-1"></div>
+    <div class="login-bg-circle login-bg-circle-2"></div>
+    <div class="login-bg-circle login-bg-circle-3"></div>
+  </div>
+
+  <!-- Back to Website -->
+  <a href="index.html" class="login-back-btn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Website
+  </a>
+
+  <div class="login-wrapper">
+
+    <!-- Left Panel: Branding -->
+    <div class="login-branding">
+      <div class="login-branding-inner">
+        <div class="login-logo">
+          <div class="login-logo-icon">⚖️</div>
+          <div class="login-logo-text">
+            BHATI LAW ASSOCIATES
+            <span>Advocates &amp; Legal Consultants</span>
+          </div>
+        </div>
+
+        <h2 class="login-branding-headline">Your Trusted<br><span>Legal Portal</span></h2>
+        <p class="login-branding-desc">Securely access your account to manage cases, documents, and consultations — all in one place.</p>
+
+        <div class="login-features">
+          <div class="login-feature">
+            <div class="login-feature-icon">🔒</div>
+            <div>
+              <strong>Secure Access</strong>
+              <p>Bank-level security for all your legal data</p>
+            </div>
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-icon">📋</div>
+            <div>
+              <strong>Case Tracking</strong>
+              <p>Monitor your case status anytime, anywhere</p>
+            </div>
+          </div>
+          <div class="login-feature">
+            <div class="login-feature-icon">💬</div>
+            <div>
+              <strong>Direct Communication</strong>
+              <p>Stay connected with your legal team</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="login-branding-contact">
+          <p>24/7 Support: <a href="tel:+919171155614">+91 9171155614</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Login Forms -->
+    <div class="login-form-panel">
+      <div class="login-card">
+
+        <div class="login-card-header">
+          <h1>Welcome Back</h1>
+          <p>Select your access type to continue</p>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="login-tabs" role="tablist" aria-label="Login type">
+          <button
+            class="login-tab active"
+            id="tab-admin"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-admin"
+            onclick="switchTab('admin')"
+          >
+            <span class="login-tab-icon">🛡️</span>
+            <span class="login-tab-label">Admin Login</span>
+          </button>
+          <button
+            class="login-tab"
+            id="tab-client"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-client"
+            onclick="switchTab('client')"
+          >
+            <span class="login-tab-icon">👤</span>
+            <span class="login-tab-label">Client Login</span>
+          </button>
+        </div>
+
+        <!-- ===== ADMIN LOGIN PANEL ===== -->
+        <div class="login-panel active" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin">
+          <div class="login-panel-label">
+            <span class="panel-badge panel-badge-admin">🛡️ Admin</span>
+            <p>Administrator access with full system privileges</p>
+          </div>
+
+          <div class="login-error" id="admin-error" role="alert" aria-live="polite"></div>
+          <div class="login-success" id="admin-success" role="alert" aria-live="polite"></div>
+
+          <form id="admin-login-form" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="admin-username">
+                <span class="input-icon">👤</span>
+                Username
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="admin-username"
+                  class="form-input login-input"
+                  placeholder="Enter your username"
+                  autocomplete="username"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-password">
+                <span class="input-icon">🔑</span>
+                Password
+              </label>
+              <div class="input-wrapper password-wrapper">
+                <input
+                  type="password"
+                  id="admin-password"
+                  class="form-input login-input"
+                  placeholder="Enter your password"
+                  autocomplete="current-password"
+                  required
+                >
+                <button type="button" class="password-toggle" onclick="togglePassword('admin-password', this)" aria-label="Toggle password visibility">
+                  <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-extras">
+              <label class="remember-me">
+                <input type="checkbox" id="admin-remember">
+                <span class="checkmark"></span>
+                Remember me
+              </label>
+              <a href="#" class="forgot-link" onclick="showForgotPassword(event)">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-login" id="admin-login-btn">
+              <span class="btn-text">Login as Admin</span>
+              <span class="btn-icon-right">→</span>
+              <span class="btn-loader" style="display:none;">
+                <svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"/></svg>
+              </span>
+            </button>
+          </form>
+        </div>
+
+        <!-- ===== CLIENT LOGIN PANEL ===== -->
+        <div class="login-panel" id="panel-client" role="tabpanel" aria-labelledby="tab-client" hidden>
+          <div class="login-panel-label">
+            <span class="panel-badge panel-badge-client">👤 Client</span>
+            <p>Track your case status and communicate with your lawyer</p>
+          </div>
+
+          <div class="login-error" id="client-error" role="alert" aria-live="polite"></div>
+          <div class="login-success" id="client-success" role="alert" aria-live="polite"></div>
+
+          <!-- Step 1: Enter Mobile -->
+          <div id="client-step-1">
+            <form id="client-mobile-form" novalidate>
+              <div class="form-group">
+                <label class="form-label" for="client-mobile">
+                  <span class="input-icon">📱</span>
+                  Mobile Number
+                </label>
+                <div class="input-wrapper mobile-wrapper">
+                  <div class="country-code">
+                    <span>🇮🇳</span>
+                    <span>+91</span>
+                  </div>
+                  <input
+                    type="tel"
+                    id="client-mobile"
+                    class="form-input login-input mobile-input"
+                    placeholder="Enter 10-digit mobile number"
+                    maxlength="10"
+                    pattern="[6-9]{1}[0-9]{9}"
+                    autocomplete="tel"
+                    required
+                  >
+                </div>
+                <small class="input-hint">A real OTP will be sent to this number via SMS</small>
+              </div>
+
+              <!-- Invisible reCAPTCHA container (required by Firebase) -->
+              <div id="recaptcha-container"></div>
+
+              <button type="submit" class="btn btn-primary btn-login" id="send-otp-btn">
+                <span class="btn-text">Send OTP</span>
+                <span class="btn-icon-right">→</span>
+                <span class="btn-loader" style="display:none;">
+                  <svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"/></svg>
+                </span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Step 2: Enter OTP -->
+          <div id="client-step-2" style="display:none;">
+            <div class="otp-info">
+              <div class="otp-info-icon">📲</div>
+              <p>OTP sent to <strong id="otp-sent-number"></strong></p>
+              <small>Didn't receive? <button type="button" class="resend-btn" id="resend-btn" onclick="resendOTP()">Resend OTP</button></small>
+            </div>
+
+            <form id="client-otp-form" novalidate>
+              <div class="form-group">
+                <label class="form-label" for="otp-input-0">Enter OTP</label>
+                <div class="otp-input-group">
+                  <input type="text" class="otp-box" id="otp-input-0" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                  <input type="text" class="otp-box" id="otp-input-1" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                  <input type="text" class="otp-box" id="otp-input-2" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                  <input type="text" class="otp-box" id="otp-input-3" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                  <input type="text" class="otp-box" id="otp-input-4" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                  <input type="text" class="otp-box" id="otp-input-5" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                </div>
+              </div>
+
+              <div class="otp-timer">
+                <span id="otp-timer-text">OTP expires in <strong id="otp-countdown">2:00</strong></span>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-login" id="verify-otp-btn">
+                <span class="btn-text">Verify &amp; Login</span>
+                <span class="btn-icon-right">→</span>
+                <span class="btn-loader" style="display:none;">
+                  <svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"/></svg>
+                </span>
+              </button>
+
+              <button type="button" class="btn-text-link" onclick="backToMobile()">
+                ← Change mobile number
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="login-footer">
+          <p>Having trouble? <a href="contact.html">Contact Support</a></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // 🔥 FIREBASE CONFIG — Paste your Firebase config here
+    // Get this from: Firebase Console → Project Settings → Your apps
+    // ============================================================
+    const firebaseConfig = {
+      apiKey:            "YOUR_API_KEY",
+      authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId:         "YOUR_PROJECT_ID",
+      storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId:             "YOUR_APP_ID"
+    };
+
+    // Check if Firebase is configured
+    const FIREBASE_CONFIGURED = firebaseConfig.apiKey !== "YOUR_API_KEY";
+
+    let firebaseApp, auth, confirmationResult, recaptchaVerifier, otpTimerInterval;
+
+    if (FIREBASE_CONFIGURED) {
+      firebaseApp = firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      auth.languageCode = 'en';
+      initRecaptcha();
+    } else {
+      console.warn('[BHATI] Firebase not configured. Client OTP will use demo mode (OTP: 123456).');
+    }
+
+    // ============================================================
+    // reCAPTCHA (required by Firebase for phone auth)
+    // ============================================================
+    function initRecaptcha() {
+      try {
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          size: 'invisible',
+          callback: () => {} // reCAPTCHA solved automatically
+        });
+        recaptchaVerifier.render();
+      } catch (e) {
+        console.error('reCAPTCHA init failed:', e);
+      }
+    }
+
+    // ============================================================
+    // Tab Switching
+    // ============================================================
+    function switchTab(role) {
+      document.querySelectorAll('.login-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.login-panel').forEach(p => {
+        p.classList.remove('active');
+        p.setAttribute('hidden', '');
+      });
+
+      document.getElementById('tab-' + role).classList.add('active');
+      document.getElementById('tab-' + role).setAttribute('aria-selected', 'true');
+      document.getElementById('panel-' + role).classList.add('active');
+      document.getElementById('panel-' + role).removeAttribute('hidden');
+      clearErrors();
+    }
+
+    function clearErrors() {
+      document.querySelectorAll('.login-error, .login-success').forEach(el => {
+        el.textContent = '';
+        el.style.display = 'none';
+      });
+    }
+
+    // ============================================================
+    // Password Toggle
+    // ============================================================
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+      } else {
+        input.type = 'password';
+        btn.innerHTML = '<svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      }
+    }
+
+    // ============================================================
+    // Admin Login (username + password — hardcoded / future backend)
+    // ============================================================
+    document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('admin-username').value.trim();
+      const password = document.getElementById('admin-password').value;
+      const btn = document.getElementById('admin-login-btn');
+
+      if (!username || !password) {
+        showError('admin-error', '⚠️ Please enter both username and password.');
+        return;
+      }
+
+      setLoading(btn, true);
+
+      setTimeout(() => {
+        // 🔐 Replace with real backend auth when ready
+        if (username === 'admin' && password === 'bhati@2024') {
+          showSuccess('admin-success', '✅ Login successful! Redirecting to dashboard...');
+          localStorage.setItem('authToken', 'admin-demo-token');
+          localStorage.setItem('userRole', 'admin');
+          setTimeout(() => { window.location.href = 'admin/dashboard.html'; }, 1200);
+        } else {
+          setLoading(btn, false);
+          showError('admin-error', '❌ Invalid username or password. Please try again.');
+          document.getElementById('admin-password').value = '';
+          document.getElementById('admin-password').focus();
+        }
+      }, 1200);
+    });
+
+    // ============================================================
+    // Client Login — Step 1: Send OTP via Firebase
+    // ============================================================
+    let clientMobile = '';
+
+    document.getElementById('client-mobile-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const mobile = document.getElementById('client-mobile').value.trim();
+      const btn = document.getElementById('send-otp-btn');
+
+      if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+        showError('client-error', '❌ Please enter a valid 10-digit Indian mobile number.');
+        return;
+      }
+
+      clientMobile = mobile;
+      setLoading(btn, true);
+
+      if (FIREBASE_CONFIGURED) {
+        // ✅ Firebase real OTP
+        try {
+          const phoneNumber = '+91' + mobile;
+          confirmationResult = await auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
+          setLoading(btn, false);
+          showOTPStep(mobile);
+        } catch (error) {
+          setLoading(btn, false);
+          let msg = '❌ Failed to send OTP. Please try again.';
+          if (error.code === 'auth/invalid-phone-number')  msg = '❌ Invalid phone number format.';
+          if (error.code === 'auth/too-many-requests')     msg = '⚠️ Too many attempts. Please try again later.';
+          if (error.code === 'auth/quota-exceeded')        msg = '⚠️ SMS quota exceeded. Please try later.';
+          showError('client-error', msg);
+          // Reset reCAPTCHA on error
+          recaptchaVerifier.render().then(widgetId => { window.grecaptcha?.reset(widgetId); });
+          console.error('Firebase OTP error:', error);
+        }
+      } else {
+        // Demo mode fallback
+        setTimeout(() => {
+          setLoading(btn, false);
+          showOTPStep(mobile);
+          console.log('[DEMO MODE] OTP is: 123456');
+        }, 1500);
+      }
+    });
+
+    function showOTPStep(mobile) {
+      document.getElementById('otp-sent-number').textContent = '+91 ' + mobile;
+      document.getElementById('client-step-1').style.display = 'none';
+      document.getElementById('client-step-2').style.display = 'block';
+      document.getElementById('otp-input-0').focus();
+      startOTPTimer(2 * 60);
+    }
+
+    // ============================================================
+    // OTP Input Box Behavior
+    // ============================================================
+    document.querySelectorAll('.otp-box').forEach((box, i, boxes) => {
+      box.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val;
+        if (val && i < boxes.length - 1) boxes[i + 1].focus();
+      });
+      box.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
+      });
+      box.addEventListener('paste', (e) => {
+        const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+        if (text.length === 6) {
+          boxes.forEach((b, idx) => { b.value = text[idx] || ''; });
+          boxes[5].focus();
+        }
+        e.preventDefault();
+      });
+    });
+
+    // ============================================================
+    // OTP Timer
+    // ============================================================
+    function startOTPTimer(seconds) {
+      clearInterval(otpTimerInterval);
+      const countdown = document.getElementById('otp-countdown');
+      const resendBtn = document.getElementById('resend-btn');
+      resendBtn.disabled = true;
+
+      otpTimerInterval = setInterval(() => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        countdown.textContent = m + ':' + String(s).padStart(2, '0');
+        seconds--;
+        if (seconds < 0) {
+          clearInterval(otpTimerInterval);
+          countdown.textContent = 'Expired';
+          resendBtn.disabled = false;
+        }
+      }, 1000);
+    }
+
+    async function resendOTP() {
+      document.querySelectorAll('.otp-box').forEach(b => b.value = '');
+      document.getElementById('otp-input-0').focus();
+      document.getElementById('client-error').style.display = 'none';
+
+      if (FIREBASE_CONFIGURED) {
+        try {
+          recaptchaVerifier.render().then(id => { window.grecaptcha?.reset(id); });
+          confirmationResult = await auth.signInWithPhoneNumber('+91' + clientMobile, recaptchaVerifier);
+          startOTPTimer(2 * 60);
+        } catch (error) {
+          showError('client-error', '❌ Failed to resend OTP. Please try again.');
+        }
+      } else {
+        startOTPTimer(2 * 60);
+        console.log('[DEMO MODE] OTP resent. Use: 123456');
+      }
+    }
+
+    function backToMobile() {
+      clearInterval(otpTimerInterval);
+      document.getElementById('client-step-2').style.display = 'none';
+      document.getElementById('client-step-1').style.display = 'block';
+      document.getElementById('client-error').style.display = 'none';
+      document.querySelectorAll('.otp-box').forEach(b => b.value = '');
+    }
+
+    // ============================================================
+    // Step 2: Verify OTP via Firebase
+    // ============================================================
+    document.getElementById('client-otp-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const otp = Array.from(document.querySelectorAll('.otp-box')).map(b => b.value).join('');
+      const btn = document.getElementById('verify-otp-btn');
+
+      if (otp.length !== 6) {
+        showError('client-error', '❌ Please enter the complete 6-digit OTP.');
+        return;
+      }
+
+      setLoading(btn, true);
+
+      if (FIREBASE_CONFIGURED) {
+        // ✅ Firebase real verification
+        try {
+          const result = await confirmationResult.confirm(otp);
+          const user = result.user;
+          clearInterval(otpTimerInterval);
+          showSuccess('client-success', '✅ Verified! Welcome back. Redirecting...');
+          localStorage.setItem('authToken', await user.getIdToken());
+          localStorage.setItem('userRole', 'client');
+          localStorage.setItem('clientMobile', clientMobile);
+          localStorage.setItem('clientUID', user.uid);
+          setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+        } catch (error) {
+          setLoading(btn, false);
+          let msg = '❌ Invalid OTP. Please check and try again.';
+          if (error.code === 'auth/code-expired') msg = '⏱️ OTP has expired. Please request a new one.';
+          showError('client-error', msg);
+          document.querySelectorAll('.otp-box').forEach(b => { b.value = ''; b.classList.add('otp-error'); });
+          setTimeout(() => document.querySelectorAll('.otp-box').forEach(b => b.classList.remove('otp-error')), 600);
+          document.getElementById('otp-input-0').focus();
+        }
+      } else {
+        // Demo mode
+        setTimeout(() => {
+          if (otp === '123456') {
+            clearInterval(otpTimerInterval);
+            showSuccess('client-success', '✅ Verified! (Demo Mode) Redirecting...');
+            localStorage.setItem('authToken', 'client-demo-token');
+            localStorage.setItem('userRole', 'client');
+            localStorage.setItem('clientMobile', clientMobile);
+            setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+          } else {
+            setLoading(btn, false);
+            showError('client-error', '❌ Invalid OTP. (Demo: use 123456)');
+            document.querySelectorAll('.otp-box').forEach(b => { b.value = ''; b.classList.add('otp-error'); });
+            setTimeout(() => document.querySelectorAll('.otp-box').forEach(b => b.classList.remove('otp-error')), 600);
+            document.getElementById('otp-input-0').focus();
+          }
+        }, 1200);
+      }
+    });
+
+    // ============================================================
+    // Helpers
+    // ============================================================
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = 'flex';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showSuccess(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = 'flex';
+    }
+
+    function setLoading(btn, loading) {
+      const text = btn.querySelector('.btn-text');
+      const icon = btn.querySelector('.btn-icon-right');
+      const loader = btn.querySelector('.btn-loader');
+      btn.disabled = loading;
+      text.style.opacity = loading ? '0.5' : '1';
+      if (icon) icon.style.display = loading ? 'none' : 'inline';
+      loader.style.display = loading ? 'inline-flex' : 'none';
+    }
+
+    function showForgotPassword(e) {
+      e.preventDefault();
+      alert('Please contact support at ajitsingh1994bhati@gmail.com or call +91-9171155614 to reset your password.');
+    }
+
+    // Mobile: digits only
+    document.getElementById('client-mobile').addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    });
+
+    // Auto-select tab from URL param (?role=admin / ?role=client)
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const role = params.get('role');
+      if (role === 'client' || role === 'admin') switchTab(role);
+    })();
+
+    // Redirect if already logged in
+    if (localStorage.getItem('authToken')) {
+      const storedRole = localStorage.getItem('userRole');
+      if (storedRole === 'admin') window.location.href = 'admin/dashboard.html';
+    }
+  </script>
+</body>
+</html>

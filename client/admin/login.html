@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — BHATI LAW ASSOCIATES</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <div class="nav-logo-icon" style="margin:0 auto 1rem;width:56px;height:56px;font-size:1.8rem;">⚖️</div>
+        <h1>Admin Login</h1>
+        <span class="section-label" style="margin-bottom:0;">BHATI LAW ASSOCIATES</span>
+      </div>
+
+      <div class="login-error" id="login-error"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address</label>
+          <input type="email" id="login-email" class="form-input" placeholder="admin@bhatilawassociates.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-input" placeholder="Enter password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" id="login-btn" style="width:100%;margin-top:0.5rem;">Login →</button>
+      </form>
+
+      <p style="text-align:center;margin-top:1.5rem;"><a href="../index.html" style="color:var(--gold-500);font-size:0.9rem;">← Back to Website</a></p>
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (localStorage.getItem('authToken')) {
+      window.location.href = 'dashboard.html';
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
+
+      errorEl.style.display = 'none';
+      btn.innerHTML = 'Logging in...';
+      btn.disabled = true;
+
+      try {
+        await api.login(email, password);
+        window.location.href = 'dashboard.html';
+      } catch (error) {
+        errorEl.textContent = error.message || 'Invalid credentials. Please try again.';
+        errorEl.style.display = 'block';
+        btn.innerHTML = 'Login →';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

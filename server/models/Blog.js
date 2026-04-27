@@ -73,6 +73,5 @@ blogSchema.pre('save', function(next) {
 
 blogSchema.index({ isPublished: 1, publishedAt: -1 });
 blogSchema.index({ category: 1 });
-blogSchema.index({ slug: 1 });
 
 module.exports = mongoose.model('Blog', blogSchema);

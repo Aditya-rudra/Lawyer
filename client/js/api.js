@@ -1,9 +1,9 @@
 /**
  * API Client — Connects frontend to backend
  */
-// Set your backend URL here. For local development use 'http://localhost:5000'
-// For production, change this to your deployed URL (e.g., 'https://my-backend.onrender.com')
-const BACKEND_URL = 'http://localhost:5000';
+// Automatically use localhost for local development, and the deployed origin for production
+const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.protocol === 'file:';
+const BACKEND_URL = isLocal ? 'http://localhost:5000' : window.location.origin;
 const API_BASE = BACKEND_URL + '/api';
 
 class ApiClient {

@@ -40,48 +40,60 @@ async function loadAppointments(status = '') {
   try {
     container.innerHTML = '<p class="text-muted">Loading appointments...</p>';
     const params = status ? `status=${status}` : '';
-    const { data } = await api.getAppointments(params);
+    
+    console.log("Fetching appointments from backend API...");
+    const response = await api.getAppointments(params);
+    console.log("API Response received:", response);
+    
+    const appointments = response.data || [];
+    console.log("Appointments:", appointments);
 
-    if (!data.length) {
+    if (!appointments || appointments.length === 0) {
       container.innerHTML = '<p class="text-muted">No appointments found.</p>';
       return;
     }
 
-    container.innerHTML = `
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Contact</th>
-            <th>Case Type</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${data.map(a => `
-            <tr>
-              <td><strong>${a.name}</strong></td>
-              <td>${a.email}<br><small>${a.phone}</small></td>
-              <td><span class="badge badge-${a.caseType}">${a.caseType}</span></td>
-              <td>${new Date(a.preferredDate).toLocaleDateString('en-IN')}<br><small>${a.preferredTime}</small></td>
-              <td><span class="status-badge status-${a.status}">${a.status}</span></td>
-              <td class="actions">
-                ${a.status === 'pending' ? `
-                  <button onclick="updateAppointmentStatus('${a._id}', 'approved')" class="btn-action btn-approve" title="Approve">✓</button>
-                  <button onclick="updateAppointmentStatus('${a._id}', 'rejected')" class="btn-action btn-reject" title="Reject">✕</button>
-                ` : ''}
-                <button onclick="deleteAppointmentItem('${a._id}')" class="btn-action btn-delete" title="Delete">🗑</button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
+    displayAppointments(appointments);
   } catch (error) {
+    console.error("Error fetching appointments:", error);
     container.innerHTML = `<p class="text-muted">Error loading appointments: ${error.message}</p>`;
   }
+}
+
+function displayAppointments(data) {
+  const container = document.getElementById('appointments-list');
+  container.innerHTML = `
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Contact</th>
+          <th>Case Type</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${data.map(a => `
+          <tr>
+            <td><strong>${a.name}</strong></td>
+            <td>${a.email}<br><small>${a.phone}</small></td>
+            <td><span class="badge badge-${a.caseType}">${a.caseType}</span></td>
+            <td>${new Date(a.preferredDate).toLocaleDateString('en-IN')}<br><small>${a.preferredTime}</small></td>
+            <td><span class="status-badge status-${a.status}">${a.status}</span></td>
+            <td class="actions">
+              ${a.status === 'pending' ? `
+                <button onclick="updateAppointmentStatus('${a._id}', 'approved')" class="btn-action btn-approve" title="Approve">✓</button>
+                <button onclick="updateAppointmentStatus('${a._id}', 'rejected')" class="btn-action btn-reject" title="Reject">✕</button>
+              ` : ''}
+              <button onclick="deleteAppointmentItem('${a._id}')" class="btn-action btn-delete" title="Delete">🗑</button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
 }
 
 async function updateAppointmentStatus(id, status) {

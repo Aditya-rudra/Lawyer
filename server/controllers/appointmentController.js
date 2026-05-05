@@ -24,6 +24,7 @@ exports.createAppointment = async (req, res, next) => {
 // @route   GET /api/appointments
 exports.getAppointments = async (req, res, next) => {
   try {
+    console.log("Backend: Fetching appointments from database...");
     const { status, page = 1, limit = 20 } = req.query;
     const query = {};
 
@@ -35,6 +36,8 @@ exports.getAppointments = async (req, res, next) => {
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
+    console.log(`Backend: Found ${appointments.length} appointments.`);
+
     res.json({
       success: true,
       count: appointments.length,
@@ -44,6 +47,7 @@ exports.getAppointments = async (req, res, next) => {
       data: appointments
     });
   } catch (error) {
+    console.error("Backend: Error fetching appointments", error);
     next(error);
   }
 };

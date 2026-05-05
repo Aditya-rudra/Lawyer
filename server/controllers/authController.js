@@ -98,3 +98,25 @@ exports.updatePassword = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Seed Admin User (Temporary for setup)
+// @route   GET /api/auth/seed-admin
+exports.seedAdmin = async (req, res, next) => {
+  try {
+    const adminExists = await User.findOne({ email: 'admin@bhatilawassociates.com' });
+    if (adminExists) {
+      return res.json({ success: true, message: 'Admin already exists! You can log in.' });
+    }
+    
+    await User.create({
+      name: 'Admin',
+      email: 'admin@bhatilawassociates.com',
+      password: 'Admin@123456',
+      role: 'admin'
+    });
+    
+    res.json({ success: true, message: 'Admin user created successfully! You can now log in with Admin@123456' });
+  } catch (error) {
+    next(error);
+  }
+};

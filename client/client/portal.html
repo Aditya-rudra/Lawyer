@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Portal — BHATI LAW ASSOCIATES</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .portal-page { min-height: 100vh; background: var(--navy-900); }
+    .portal-header { background: linear-gradient(135deg, var(--navy-800), var(--navy-900)); padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--gold-500); }
+    .portal-header .logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--white); }
+    .portal-header .logo-icon { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, var(--gold-500), var(--gold-600)); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .portal-header .logo-text { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; }
+    .portal-header .logo-text span { display: block; font-size: 0.7rem; color: var(--gold-500); font-weight: 400; letter-spacing: 2px; }
+    .portal-user { display: flex; align-items: center; gap: 1rem; }
+    .portal-user-info { text-align: right; color: var(--gray-300); font-size: 0.9rem; }
+    .portal-user-info strong { color: var(--white); display: block; }
+    .portal-body { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    .portal-welcome { background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.05)); border: 1px solid rgba(212,175,55,0.2); border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2rem; }
+    .portal-welcome h2 { color: var(--white); margin-bottom: 0.5rem; font-size: 1.4rem; }
+    .portal-welcome p { color: var(--gray-400); }
+    .portal-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .portal-stat { background: var(--navy-800); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: 1.5rem; text-align: center; }
+    .portal-stat-number { font-size: 2rem; font-weight: 700; color: var(--gold-500); }
+    .portal-stat-label { font-size: 0.85rem; color: var(--gray-400); margin-top: 0.25rem; }
+    .portal-section { background: var(--navy-800); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); margin-bottom: 2rem; overflow: hidden; }
+    .portal-section-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; }
+    .portal-section-header h3 { color: var(--white); margin: 0; font-size: 1.1rem; }
+    .portal-section-body { padding: 1.5rem; }
+    .portal-table { width: 100%; border-collapse: collapse; }
+    .portal-table th { text-align: left; padding: 0.75rem 1rem; color: var(--gold-500); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .portal-table td { padding: 0.85rem 1rem; color: var(--gray-300); font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .portal-table tr:last-child td { border-bottom: none; }
+    .status-pill { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; }
+    .status-pill.pending { background: rgba(255,193,7,0.15); color: #ffc107; }
+    .status-pill.approved { background: rgba(40,167,69,0.15); color: #28a745; }
+    .status-pill.completed { background: rgba(23,162,184,0.15); color: #17a2b8; }
+    .status-pill.rejected { background: rgba(220,53,69,0.15); color: #dc3545; }
+    .status-pill.new { background: rgba(212,175,55,0.15); color: var(--gold-500); }
+    .status-pill.read { background: rgba(108,117,125,0.15); color: #6c757d; }
+    .empty-state { text-align: center; padding: 3rem 2rem; color: var(--gray-500); }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+    .empty-state h4 { color: var(--gray-400); margin-bottom: 0.5rem; }
+    @media (max-width: 768px) {
+      .portal-stats { grid-template-columns: 1fr; }
+      .portal-header { flex-direction: column; gap: 1rem; text-align: center; }
+      .portal-user-info { text-align: center; }
+      .portal-table { font-size: 0.8rem; }
+      .portal-table th, .portal-table td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="portal-page">
+    <!-- Header -->
+    <div class="portal-header">
+      <a href="../index.html" class="logo">
+        <div class="logo-icon">⚖️</div>
+        <div class="logo-text">
+          BHATI LAW ASSOCIATES
+          <span>CLIENT PORTAL</span>
+        </div>
+      </a>
+      <div class="portal-user">
+        <div class="portal-user-info">
+          <strong id="client-name">Client</strong>
+          <span id="client-phone-display">—</span>
+        </div>
+        <button onclick="clientLogout()" class="btn btn-primary btn-sm" style="font-size:0.8rem;">Logout</button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="portal-body">
+      <!-- Welcome -->
+      <div class="portal-welcome">
+        <h2>Welcome, <span id="welcome-name">Client</span> 👋</h2>
+        <p>View the status of your appointments and inquiries with BHATI LAW ASSOCIATES.</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="portal-stats">
+        <div class="portal-stat">
+          <div class="portal-stat-number" id="stat-total-appointments">0</div>
+          <div class="portal-stat-label">Your Appointments</div>
+        </div>
+        <div class="portal-stat">
+          <div class="portal-stat-number" id="stat-total-queries">0</div>
+          <div class="portal-stat-label">Your Inquiries</div>
+        </div>
+        <div class="portal-stat">
+          <div class="portal-stat-number" id="stat-pending">0</div>
+          <div class="portal-stat-label">Pending</div>
+        </div>
+      </div>
+
+      <!-- Appointments Section -->
+      <div class="portal-section">
+        <div class="portal-section-header">
+          <h3>📅 Your Appointments</h3>
+        </div>
+        <div class="portal-section-body" id="client-appointments">
+          <div class="empty-state">
+            <div class="icon">⏳</div>
+            <h4>Loading your appointments...</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Queries Section -->
+      <div class="portal-section">
+        <div class="portal-section-header">
+          <h3>📩 Your Inquiries</h3>
+        </div>
+        <div class="portal-section-body" id="client-queries">
+          <div class="empty-state">
+            <div class="icon">⏳</div>
+            <h4>Loading your inquiries...</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="portal-section">
+        <div class="portal-section-header">
+          <h3>📞 Need Help?</h3>
+        </div>
+        <div class="portal-section-body" style="display:flex;gap:2rem;flex-wrap:wrap;">
+          <div>
+            <p style="color:var(--gray-400);margin-bottom:0.5rem;">Call us directly:</p>
+            <a href="tel:+919171155614" style="color:var(--gold-500);font-size:1.1rem;font-weight:600;">📞 +91-9171155614</a>
+          </div>
+          <div>
+            <p style="color:var(--gray-400);margin-bottom:0.5rem;">WhatsApp:</p>
+            <a href="https://wa.me/919171155614" target="_blank" style="color:#25d366;font-size:1.1rem;font-weight:600;">💬 Chat on WhatsApp</a>
+          </div>
+          <div>
+            <p style="color:var(--gray-400);margin-bottom:0.5rem;">Email:</p>
+            <a href="mailto:ajitsingh1994bhati@gmail.com" style="color:var(--gold-500);font-size:1rem;">📧 ajitsingh1994bhati@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Auth check
+    const role = localStorage.getItem('authRole');
+    const phone = localStorage.getItem('clientPhone');
+    if (role !== 'client' || !phone) {
+      window.location.href = '../admin/login.html';
+    }
+
+    // Display client info
+    const user = JSON.parse(localStorage.getItem('authUser') || '{}');
+    document.getElementById('client-name').textContent = user.name || 'Client';
+    document.getElementById('welcome-name').textContent = (user.name || 'Client').split(' ')[0];
+    document.getElementById('client-phone-display').textContent = '+91-' + phone;
+
+    // Load client data
+    loadClientData();
+
+    async function loadClientData() {
+      try {
+        const res = await fetch('/api/client/data?phone=' + phone);
+        const data = await res.json();
+
+        if (!data.success) {
+          throw new Error(data.message);
+        }
+
+        // Stats
+        const appointments = data.appointments || [];
+        const queries = data.queries || [];
+        document.getElementById('stat-total-appointments').textContent = appointments.length;
+        document.getElementById('stat-total-queries').textContent = queries.length;
+        const pendingCount = appointments.filter(a => a.status === 'pending').length + queries.filter(q => !q.isRead).length;
+        document.getElementById('stat-pending').textContent = pendingCount;
+
+        // Render appointments
+        renderAppointments(appointments);
+        renderQueries(queries);
+
+      } catch (error) {
+        console.error('Failed to load client data:', error);
+        document.getElementById('client-appointments').innerHTML = `
+          <div class="empty-state">
+            <div class="icon">⚠️</div>
+            <h4>Unable to load data</h4>
+            <p>${error.message || 'Please try again later.'}</p>
+          </div>`;
+        document.getElementById('client-queries').innerHTML = document.getElementById('client-appointments').innerHTML;
+      }
+    }
+
+    function renderAppointments(appointments) {
+      const container = document.getElementById('client-appointments');
+      if (!appointments.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">📅</div>
+            <h4>No appointments yet</h4>
+            <p>Book a consultation <a href="../contact.html" style="color:var(--gold-500);">here</a></p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="portal-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Case Type</th>
+              <th>Message</th>
+              <th>Status</th>
+              <th>Booked On</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${appointments.map(a => `
+              <tr>
+                <td>
+                  <strong>${new Date(a.preferredDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</strong><br>
+                  <small style="color:var(--gray-500);">${a.preferredTime}</small>
+                </td>
+                <td style="text-transform:capitalize;">${a.caseType}</td>
+                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.message || '—'}</td>
+                <td><span class="status-pill ${a.status}">${a.status}</span></td>
+                <td style="color:var(--gray-500);font-size:0.8rem;">${new Date(a.createdAt).toLocaleDateString('en-IN')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function renderQueries(queries) {
+      const container = document.getElementById('client-queries');
+      if (!queries.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">📩</div>
+            <h4>No inquiries yet</h4>
+            <p>Submit an inquiry <a href="../contact.html" style="color:var(--gold-500);">here</a></p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="portal-table">
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Message</th>
+              <th>Status</th>
+              <th>Submitted On</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${queries.map(q => `
+              <tr>
+                <td><strong>${q.subject}</strong></td>
+                <td style="max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${q.message}</td>
+                <td><span class="status-pill ${q.isRead ? 'read' : 'new'}">${q.isRead ? 'Reviewed' : 'New'}</span></td>
+                <td style="color:var(--gray-500);font-size:0.8rem;">${new Date(q.createdAt).toLocaleDateString('en-IN')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function clientLogout() {
+      localStorage.removeItem('authRole');
+      localStorage.removeItem('clientPhone');
+      localStorage.removeItem('authUser');
+      localStorage.removeItem('authToken');
+      window.location.href = '../admin/login.html';
+    }
+  </script>
+</body>
+</html>

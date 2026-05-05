@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — BHATI LAW ASSOCIATES</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .login-tabs { display: flex; gap: 0; margin-bottom: 2rem; border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--gold-500); }
+    .login-tab { flex: 1; padding: 0.85rem 1rem; text-align: center; cursor: pointer; font-weight: 600; font-size: 0.95rem; border: none; background: transparent; color: var(--gold-500); transition: all 0.3s; }
+    .login-tab.active { background: var(--gold-500); color: var(--navy-900); }
+    .login-tab:hover:not(.active) { background: rgba(212,175,55,0.1); }
+    .login-tab-content { display: none; }
+    .login-tab-content.active { display: block; }
+    .login-card { max-width: 440px; }
+    .login-info { background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.2); border-radius: var(--radius-md); padding: 1rem; margin-top: 1.25rem; font-size: 0.85rem; color: var(--gray-400); }
+    .login-info strong { color: var(--gold-500); }
+  </style>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <div class="nav-logo-icon" style="margin:0 auto 1rem;width:56px;height:56px;font-size:1.8rem;">⚖️</div>
+        <h1 style="font-size:1.5rem;">BHATI LAW ASSOCIATES</h1>
+        <p style="color:var(--gray-400);margin-top:0.25rem;font-size:0.9rem;">Advocates & Legal Consultants</p>
+      </div>
+
+      <!-- Login Type Tabs -->
+      <div class="login-tabs">
+        <button class="login-tab active" onclick="switchLoginTab('admin')">🔑 Admin Login</button>
+        <button class="login-tab" onclick="switchLoginTab('client')">👤 Client Login</button>
+      </div>
+
+      <!-- Admin Login Form -->
+      <div class="login-tab-content active" id="tab-admin">
+        <div class="login-error" id="admin-error"></div>
+        <form id="admin-login-form">
+          <div class="form-group">
+            <label class="form-label" for="admin-username">Email</label>
+            <input type="email" id="admin-username" class="form-input" placeholder="Enter admin email" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-password">Password</label>
+            <input type="password" id="admin-password" class="form-input" placeholder="Enter password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" id="admin-login-btn" style="width:100%;margin-top:0.5rem;">Login as Admin →</button>
+        </form>
+      </div>
+
+      <!-- Client Login Form -->
+      <div class="login-tab-content" id="tab-client">
+        <div class="login-error" id="client-error"></div>
+        <form id="client-login-form">
+          <div class="form-group">
+            <label class="form-label" for="client-phone">Mobile Number</label>
+            <input type="tel" id="client-phone" class="form-input" placeholder="Enter your registered mobile number" pattern="[0-9]{10}" maxlength="10" required>
+            <small style="color:var(--gray-400);font-size:0.8rem;">Enter the mobile number you used while booking an appointment or submitting an inquiry.</small>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg" id="client-login-btn" style="width:100%;margin-top:0.5rem;">Login as Client →</button>
+        </form>
+        <div class="login-info">
+          <strong>ℹ️ Note:</strong> Client login uses the mobile number you provided when booking an appointment or contacting us. If you haven't submitted any inquiry yet, please <a href="../contact.html" style="color:var(--gold-500);">contact us first</a>.
+        </div>
+      </div>
+
+      <p style="text-align:center;margin-top:1.5rem;">
+        <a href="../index.html" style="color:var(--gold-500);font-size:0.9rem;">← Back to Website</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function switchLoginTab(tab) {
+      document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.login-tab-content').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    // Admin Login
+    document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('admin-username').value.trim();
+      const password = document.getElementById('admin-password').value;
+      const errorEl = document.getElementById('admin-error');
+      const btn = document.getElementById('admin-login-btn');
+
+      errorEl.style.display = 'none';
+      btn.innerHTML = 'Logging in...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: username, password: password })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          localStorage.setItem('authRole', 'admin');
+          localStorage.setItem('authUser', JSON.stringify(data.user || { name: 'Admin', role: 'admin' }));
+          localStorage.setItem('authToken', data.token);
+          window.location.href = 'dashboard.html';
+        } else {
+          errorEl.textContent = data.message || 'Invalid email or password. Please try again.';
+          errorEl.style.display = 'block';
+          btn.innerHTML = 'Login as Admin →';
+          btn.disabled = false;
+        }
+      } catch (err) {
+        errorEl.textContent = 'Server connection error. Please try again later.';
+        errorEl.style.display = 'block';
+        btn.innerHTML = 'Login as Admin →';
+        btn.disabled = false;
+      }
+    });
+
+    // Client Login
+    document.getElementById('client-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('client-phone').value.trim();
+      const errorEl = document.getElementById('client-error');
+      const btn = document.getElementById('client-login-btn');
+
+      if (!/^[0-9]{10}$/.test(phone)) {
+        errorEl.textContent = 'Please enter a valid 10-digit mobile number.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      errorEl.style.display = 'none';
+      btn.innerHTML = 'Checking...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/client/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('authRole', 'client');
+          localStorage.setItem('clientPhone', phone);
+          localStorage.setItem('authUser', JSON.stringify({ name: data.clientName || 'Client', role: 'client', phone }));
+          window.location.href = '../client/portal.html';
+        } else {
+          errorEl.textContent = data.message || 'No records found for this mobile number. Please contact us first.';
+          errorEl.style.display = 'block';
+          btn.innerHTML = 'Login as Client →';
+          btn.disabled = false;
+        }
+      } catch (error) {
+        errorEl.textContent = 'Unable to verify. Please try again later.';
+        errorEl.style.display = 'block';
+        btn.innerHTML = 'Login as Client →';
+        btn.disabled = false;
+      }
+    });
+
+    // Redirect if already logged in
+    const existingRole = localStorage.getItem('authRole');
+    if (existingRole === 'admin') {
+      window.location.href = 'dashboard.html';
+    } else if (existingRole === 'client') {
+      window.location.href = '../client/portal.html';
+    }
+  </script>
+</body>
+</html>

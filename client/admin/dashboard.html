@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — BHATI LAW ASSOCIATES</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <a href="../index.html" class="nav-logo">
+        <div class="nav-logo-icon" style="width:36px;height:36px;font-size:1.1rem;">⚖️</div>
+        <div class="nav-logo-text" style="font-size:1.1rem;">Admin Panel<span>BHATI LAW ASSOCIATES</span></div>
+      </a>
+
+      <nav class="admin-nav">
+        <button class="admin-tab active" data-tab="dashboard" onclick="switchTab('dashboard')"><span class="icon">📊</span> Dashboard</button>
+        <button class="admin-tab" data-tab="appointments" onclick="switchTab('appointments')"><span class="icon">📅</span> Appointments</button>
+        <button class="admin-tab" data-tab="contacts" onclick="switchTab('contacts')"><span class="icon">📩</span> Inquiries</button>
+        <button class="admin-tab" data-tab="blogs" onclick="switchTab('blogs')"><span class="icon">📝</span> Blog Posts</button>
+        <button class="admin-tab" data-tab="testimonials" onclick="switchTab('testimonials')"><span class="icon">⭐</span> Testimonials</button>
+        <button class="admin-tab" data-tab="cases" onclick="switchTab('cases')"><span class="icon">🏆</span> Case Results</button>
+      </nav>
+
+      <div class="admin-logout" style="margin-top:auto;padding-top:2rem;">
+        <button onclick="api.logout()"><span>🚪</span> Logout</button>
+        <a href="../index.html" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:0.5rem;">🌐 View Website</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Dashboard Tab -->
+      <div class="admin-tab-content" id="tab-dashboard" style="display:block;">
+        <div class="admin-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back, Admin. Here's your overview.</p>
+          </div>
+        </div>
+
+        <div class="admin-stats">
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon blue">📅</div>
+            <div><div class="admin-stat-number" id="stat-appointments">0</div><div class="admin-stat-label">Appointments</div></div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon green">📩</div>
+            <div><div class="admin-stat-number" id="stat-contacts">0</div><div class="admin-stat-label">Inquiries</div></div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon purple">📝</div>
+            <div><div class="admin-stat-number" id="stat-blogs">0</div><div class="admin-stat-label">Blog Posts</div></div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon gold">🏆</div>
+            <div><div class="admin-stat-number" id="stat-cases">0</div><div class="admin-stat-label">Case Results</div></div>
+          </div>
+        </div>
+
+        <div style="background:var(--white);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-sm);">
+          <h3>Quick Actions</h3>
+          <div class="btn-group" style="margin-top:1rem;">
+            <button onclick="switchTab('appointments')" class="btn btn-primary btn-sm">View Appointments</button>
+            <button onclick="switchTab('contacts')" class="btn btn-outline btn-sm">View Inquiries</button>
+            <button onclick="switchTab('blogs');setTimeout(()=>toggleModal('blog-modal'),300);" class="btn btn-outline btn-sm">New Blog Post</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appointments Tab -->
+      <div class="admin-tab-content" id="tab-appointments">
+        <div class="admin-content-header">
+          <h2>📅 Appointments</h2>
+          <div class="filter-tabs">
+            <button class="filter-tab active" onclick="loadAppointments(); this.parentElement.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active')); this.classList.add('active');">All</button>
+            <button class="filter-tab" onclick="loadAppointments('pending'); this.parentElement.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active')); this.classList.add('active');">Pending</button>
+            <button class="filter-tab" onclick="loadAppointments('approved'); this.parentElement.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active')); this.classList.add('active');">Approved</button>
+          </div>
+        </div>
+        <div id="appointments-list"></div>
+      </div>
+
+      <!-- Contacts Tab -->
+      <div class="admin-tab-content" id="tab-contacts">
+        <div class="admin-content-header"><h2>📩 Contact Inquiries</h2></div>
+        <div id="contacts-list"></div>
+      </div>
+
+      <!-- Blogs Tab -->
+      <div class="admin-tab-content" id="tab-blogs">
+        <div class="admin-content-header">
+          <h2>📝 Blog Posts</h2>
+          <button class="btn btn-primary btn-sm" onclick="toggleModal('blog-modal')">+ New Post</button>
+        </div>
+        <div id="blogs-list"></div>
+      </div>
+
+      <!-- Testimonials Tab -->
+      <div class="admin-tab-content" id="tab-testimonials">
+        <div class="admin-content-header">
+          <h2>⭐ Testimonials</h2>
+          <button class="btn btn-primary btn-sm" onclick="toggleModal('testimonial-modal')">+ Add Testimonial</button>
+        </div>
+        <div id="testimonials-list"></div>
+      </div>
+
+      <!-- Cases Tab -->
+      <div class="admin-tab-content" id="tab-cases">
+        <div class="admin-content-header">
+          <h2>🏆 Case Results</h2>
+          <button class="btn btn-primary btn-sm" onclick="toggleModal('case-modal')">+ Add Case</button>
+        </div>
+        <div id="cases-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Blog Modal -->
+  <div class="modal-overlay" id="blog-modal">
+    <div class="modal">
+      <h3>Create Blog Post</h3>
+      <form id="blog-form" onsubmit="event.preventDefault(); createBlogPost(Object.fromEntries(new FormData(this)));">
+        <div class="form-group"><label class="form-label">Title *</label><input name="title" class="form-input" required></div>
+        <div class="form-group"><label class="form-label">Excerpt *</label><input name="excerpt" class="form-input" required></div>
+        <div class="form-group"><label class="form-label">Category *</label>
+          <select name="category" class="form-select" required><option value="legal-advice">Legal Advice</option><option value="guides">Guides</option><option value="news">News</option><option value="case-studies">Case Studies</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Content *</label><textarea name="content" class="form-textarea" style="min-height:200px;" required></textarea></div>
+        <div class="form-group"><label class="form-label"><input type="checkbox" name="isPublished" value="true"> Publish immediately</label></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline btn-sm" onclick="toggleModal('blog-modal', false)">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Create Post</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Testimonial Modal -->
+  <div class="modal-overlay" id="testimonial-modal">
+    <div class="modal">
+      <h3>Add Testimonial</h3>
+      <form id="testimonial-form" onsubmit="event.preventDefault(); createTestimonialItem(Object.fromEntries(new FormData(this)));">
+        <div class="grid grid-2"><div class="form-group"><label class="form-label">Client Name *</label><input name="name" class="form-input" required></div><div class="form-group"><label class="form-label">Role</label><input name="role" class="form-input" value="Client" placeholder="e.g. Business Owner"></div></div>
+        <div class="form-group"><label class="form-label">Review *</label><textarea name="content" class="form-textarea" required></textarea></div>
+        <div class="grid grid-2"><div class="form-group"><label class="form-label">Rating (1-5)</label><select name="rating" class="form-select"><option value="5">5 Stars</option><option value="4">4 Stars</option><option value="3">3 Stars</option></select></div><div class="form-group"><label class="form-label">Case Type</label><input name="caseType" class="form-input" placeholder="e.g. criminal"></div></div>
+        <div class="modal-actions"><button type="button" class="btn btn-outline btn-sm" onclick="toggleModal('testimonial-modal', false)">Cancel</button><button type="submit" class="btn btn-primary btn-sm">Add Testimonial</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Case Modal -->
+  <div class="modal-overlay" id="case-modal">
+    <div class="modal">
+      <h3>Add Case Result</h3>
+      <form id="case-form" onsubmit="event.preventDefault(); createCaseItem(Object.fromEntries(new FormData(this)));">
+        <div class="form-group"><label class="form-label">Title *</label><input name="title" class="form-input" required></div>
+        <div class="form-group"><label class="form-label">Description *</label><textarea name="description" class="form-textarea" required></textarea></div>
+        <div class="grid grid-2">
+          <div class="form-group"><label class="form-label">Case Type *</label><select name="caseType" class="form-select" required><option value="criminal">Criminal</option><option value="civil">Civil</option><option value="corporate">Corporate</option><option value="debt">Debt Recovery</option><option value="property">Property</option><option value="family">Family</option></select></div>
+          <div class="form-group"><label class="form-label">Result Badge</label><select name="resultBadge" class="form-select"><option value="won">Won</option><option value="acquitted">Acquitted</option><option value="settled">Settled</option><option value="dismissed">Dismissed</option><option value="favorable">Favorable</option><option value="recovered">Recovered</option></select></div>
+        </div>
+        <div class="form-group"><label class="form-label">Result *</label><input name="result" class="form-input" required placeholder="e.g. Bail granted, debt recovered"></div>
+        <div class="grid grid-2"><div class="form-group"><label class="form-label">Timeline</label><input name="timeline" class="form-input" placeholder="e.g. 3 months"></div><div class="form-group"><label class="form-label">Court</label><input name="court" class="form-input" placeholder="e.g. Indore District Court"></div></div>
+        <div class="form-group"><label class="form-label">Year</label><input name="year" type="number" class="form-input" value="2024"></div>
+        <div class="modal-actions"><button type="button" class="btn btn-outline btn-sm" onclick="toggleModal('case-modal', false)">Cancel</button><button type="submit" class="btn btn-primary btn-sm">Add Case</button></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/admin.js"></script>
+  <script>
+    // Auth guard
+    if (!checkAuth()) {
+      window.location.href = 'login.html';
+    } else {
+      loadDashboardStats();
+    }
+
+    // Close modals on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

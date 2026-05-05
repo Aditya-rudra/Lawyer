@@ -174,19 +174,23 @@
   <script src="../js/api.js"></script>
   <script src="../js/admin.js"></script>
   <script>
-    // Auth guard
-    if (!checkAuth()) {
-      window.location.href = 'login.html';
-    } else {
-      loadDashboardStats();
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      // Auth guard
+      if (!checkAuth()) {
+        window.location.href = 'login.html';
+      } else {
+        loadDashboardStats();
+        // Ensure appointments API call runs on page load
+        loadAppointments();
+      }
 
-    // Close modals on overlay click
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-          overlay.style.display = 'none';
-        }
+      // Close modals on overlay click
+      document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) {
+            overlay.style.display = 'none';
+          }
+        });
       });
     });
   </script>

@@ -1,7 +1,10 @@
 /**
  * API Client — Connects frontend to backend
  */
-const API_BASE = window.location.origin + '/api';
+// Set your backend URL here. For local development use 'http://localhost:5000'
+// For production, change this to your deployed URL (e.g., 'https://my-backend.onrender.com')
+const BACKEND_URL = 'http://localhost:5000';
+const API_BASE = BACKEND_URL + '/api';
 
 class ApiClient {
   constructor() {

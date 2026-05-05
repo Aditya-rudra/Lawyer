@@ -53,6 +53,11 @@ class ApiClient {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 401) {
+          console.warn("Token expired or invalid. Logging out automatically.");
+          this.clearToken();
+          window.location.href = '/admin/login.html';
+        }
         throw new Error(data.message || 'Something went wrong');
       }
 

@@ -69,6 +69,7 @@ function displayAppointments(data) {
           <th>Name</th>
           <th>Contact</th>
           <th>Case Type</th>
+          <th>Message</th>
           <th>Date</th>
           <th>Status</th>
           <th>Actions</th>
@@ -80,6 +81,7 @@ function displayAppointments(data) {
             <td><strong>${a.name}</strong></td>
             <td>${a.email}<br><small>${a.phone}</small></td>
             <td><span class="badge badge-${a.caseType}">${a.caseType}</span></td>
+            <td class="msg-cell" title="${a.message || ''}">${a.message ? (a.message.length > 40 ? a.message.substring(0, 40) + '...' : a.message) : '<span class="text-muted">No message</span>'}</td>
             <td>${new Date(a.preferredDate).toLocaleDateString('en-IN')}<br><small>${a.preferredTime}</small></td>
             <td><span class="status-badge status-${a.status}">${a.status}</span></td>
             <td class="actions">
